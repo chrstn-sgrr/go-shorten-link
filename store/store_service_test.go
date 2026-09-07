@@ -25,7 +25,7 @@ func TestInsertionAndRetrieval(t *testing.T) {
 	SaveUrlMapping(shortURL, initialLink, userUUId)
 
 	// retrieve initial url
-	retrievedUrl := RetrieveInitialUrl(shortURL)
-
+	retrievedUrl, err := RetrieveInitialUrl(shortURL)
+	assert.NoError(t, err)
 	assert.Equal(t, initialLink, retrievedUrl)
 }
