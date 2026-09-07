@@ -1,6 +1,9 @@
+package store
+
 import (
-	"github.com/stretchr/testify"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 var testStoreService = &StorageService{}
@@ -9,7 +12,7 @@ func init() {
 	testStoreService = InitializeStore()
 }
 
-func TestStoreInit(t &testing.T) {
+func TestStoreInit(t *testing.T) {
 	assert.True(t, testStoreService.redisClient != nil)
 }
 

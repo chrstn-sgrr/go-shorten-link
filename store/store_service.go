@@ -3,7 +3,7 @@ package store
 import (
 	"context"
 	"fmt"
-	"github.com/go-redis/redis"
+	"github.com/go-redis/redis/v8"
 	"time"
 )
 
@@ -15,7 +15,7 @@ type StorageService struct {
 // top lvl declarations for the storeService and Redis context
 var (
 	storeService = &StorageService{}
-	ctx = context.Background()
+	ctx          = context.Background()
 )
 
 const CacheDuration = 6 * time.Hour
@@ -23,22 +23,22 @@ const CacheDuration = 6 * time.Hour
 // initialize store service and return a store pointer
 func InitializeStore() *StorageService {
 	redisClient := redis.NewClient(&redis.Options{
-		Addr: "localhost:6379",
+		Addr:     "localhost:6379",
 		Password: "",
-		DB: 0,
+		DB:       0,
 	})
 
 	pong, err := redisClient.Ping(ctx).Result()
 	if err != nil {
 		panic(fmt.Sprintf("Error init Redis: %v", err))
-
-		fmt.Printf("\nReds started successfully: pong message = {%s}, pong")
-		storeService.redisClient = redisClient
-		return storeService
 	}
+
+	fmt.Printf("\nRedis started successfully: pong message = {%s}\n", pong)
+	storeService.redisClient = redisClient
+	return storeService
 }
 
-func SaveUrlMapping(shortUrl string, originalUrl, string, userId string){
+func SaveUrlMapping(shortUrl string, originalUrl string, userId string) {
 	err := storeService.redisClient.Set(ctx, shortUrl, originalUrl, CacheDuration).Err()
 	if err != nil {
 		panic(fmt.Sprintf("Failed saving key url | Error %v - shortUrl: %s - originalUrl: %s\n", err, shortUrl, originalUrl))
